@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public Fragment createFragment(int position) {
                 if (position == 0) {
-                    return new SettingsFragment();
-                } else {
                     dataListFragment = new DataListFragment();
                     return dataListFragment;
+                } else {
+                    return new SettingsFragment();
                 }
             }
 
@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) {
-                tab.setText("Settings");
+                tab.setText("Posts");
             } else {
-                tab.setText("Signals");
+                tab.setText("Settings");
             }
         }).attach();
 
