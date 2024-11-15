@@ -20,7 +20,7 @@ public class CustomNotificationListenerService extends NotificationListenerServi
 
     public static void updateSettings(String packageName, String postUrl, String token) {
         TELEGRAM_PACKAGE_NAME = packageName;
-        POST_URL = postUrl;
+        POST_URL = postUrl + "/add.php";
         TOKEN = token;
     }
 
