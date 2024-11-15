@@ -1,6 +1,7 @@
 package com.example.solexxsnifferv2;
 
 import android.os.Bundle;
+import android.util.Log; // Dodajemy logowanie
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +16,30 @@ import java.util.List;
 
 public class DataListFragment extends Fragment {
 
-    @Nullable
+    private RecyclerView recyclerView;
+    private NotificationAdapter adapter;
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_data_list, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_data_list, container, false);
+
+        recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Example data
-        List<String> data = new ArrayList<>();
-        data.add("Item 1");
-        data.add("Item 2");
-        data.add("Item 3");
-
-        DataAdapter adapter = new DataAdapter(data);
+        // Inicjalizuj adapter
+        adapter = new NotificationAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
-        return view;
+        return rootView;
+    }
+
+    // Metoda do zaktualizowania danych w adapterze
+    public void updateData(List<NotificationData> notifications) {
+        if (adapter != null) {
+            Log.d("DataListFragment", "Aktualizacja danych: " + notifications.toString());
+            adapter.updateData(notifications);  // Przekazywanie nowych danych do adaptera
+        } else {
+            Log.e("DataListFragment", "Adapter jest nullem, nie można zaktualizować danych.");
+        }
     }
 }
