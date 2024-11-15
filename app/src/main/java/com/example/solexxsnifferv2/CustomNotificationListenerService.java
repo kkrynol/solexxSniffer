@@ -19,7 +19,6 @@ public class CustomNotificationListenerService extends NotificationListenerServi
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        Log.i(TAG, "Powiadomienie");
         // Sprawdzenie, czy powiadomienie pochodzi z aplikacji Telegram
         if (TELEGRAM_PACKAGE_NAME.equals(sbn.getPackageName())) {
             Log.i(TAG, "Otrzymano powiadomienie z Telegram: " + sbn.getPackageName());
