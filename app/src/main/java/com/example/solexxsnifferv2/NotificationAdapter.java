@@ -34,7 +34,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         NotificationData notification = notifications.get(position);
         // Ustaw dane w widoku
         holder.titleTextView.setText(notification.getTitle());
-        holder.messageTextView.setText(notification.getMessage()); // Używamy getMessage()
+        holder.messageTextView.setText(notification.getText());
+        holder.dateTextView.setText(notification.getDate()); // Ustaw datę
     }
 
     @Override
@@ -45,11 +46,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView messageTextView;
+        TextView dateTextView; // Dodane pole dla daty
 
         public NotificationViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView); // Inicjalizacja widoku daty
         }
     }
 }

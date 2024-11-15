@@ -2,31 +2,37 @@ package com.example.solexxsnifferv2;
 
 public class NotificationData {
     private String title;
-    private String message;
+    private String text;
+    private String date; // Dodane pole dla daty
 
     // Konstruktor
-    public NotificationData(String title, String message) {
+    public NotificationData(String title, String text, String date) {
         this.title = title;
-        this.message = message;
+        this.text = text;
+        this.date = date;
     }
 
-    // Getter dla tytułu
     public String getTitle() {
         return title;
     }
 
-    // Getter dla wiadomości
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    // Setter dla tytułu
+    public String getDate() {
+        return date;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    // Setter dla wiadomości
-    public void setMessage(String message) {
-        this.message = message;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
