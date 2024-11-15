@@ -7,27 +7,30 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/textToken"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Text field 1"
+        android:hint="GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l"
         tools:ignore="HardcodedText" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/textApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Text field 2"/>
+        android:hint="org.telegram.messenger"
+        tools:ignore="HardcodedText" />
 
-    <CheckBox
-        android:id="@+id/checkBox1"
+    <EditText
+        android:id="@+id/textServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="https://capybara.s1.zetohosting.pl"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/buttonApplySettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Checkbox 1"/>
+        android:text="Apply Settings" />
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Checkbox 2"/>
 </LinearLayout>
