@@ -31,10 +31,16 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String DATA_URL = "https://capybara.s1.zetohosting.pl/";
     private NotificationAdapter adapter;
-    private List<NotificationData> notifications;
+    private List<NotificationData> notifications = new ArrayList<>();
     private Handler handler = new Handler();
     private DataListFragment dataListFragment;
-    private NotificationData lastNotification;  // Przechowywanie ostatniego powiadomienia
+    private int currentListSize = 0; // Dodane pole do przechowywania aktualnej liczby elementów w liście UI
+
+    private static boolean enableNotify = false;
+    public static void updateSettings(boolean flag)
+    {
+        enableNotify = flag;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
                 if (data != null && !data.isEmpty()) {
                     Log.i("test", "dane otrzymane");
 
-                    // Odwrócenie kolejności, aby najnowsze dane były na początku
                     Collections.reverse(data);
                     notifications = data;
 
@@ -129,9 +134,13 @@ public class MainActivity extends AppCompatActivity {
                         dataListFragment.updateData(notifications);
                     }
 
-                    // Sprawdzenie, czy pojawił się nowy element
-                    if (lastNotification == null || !lastNotification.equals(data.get(0))) {
-                        lastNotification = data.get(0);
+                    // Sprawdzenie, czy nowa lista ma więcej elementów niż aktualna lista w UI
+                    if(data.size() == 0)
+                    {
+                        currentListSize = 0;
+                    }
+                    if (data.size() > currentListSize) {
+                        currentListSize = data.size(); // Zaktualizuj rozmiar listy
                         showNotification("Nowy element w Signals", "Pojawił się nowy element!");
                     }
                 } else {
@@ -149,11 +158,9 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
-
     private void showNotification(String title, String content) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        // Utworzenie kanału powiadomień (wymagane od Androida 8.0)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String channelId = "signals_channel";
             CharSequence channelName = "Signals Notifications";
@@ -162,14 +169,14 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        // Tworzenie powiadomienia
         Notification notification = new Notification.Builder(this, "signals_channel")
                 .setContentTitle(title)
                 .setContentText(content)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .build();
 
-        // Wyświetlanie powiadomienia
-        //notificationManager.notify(0, notification);
+        if(enableNotify) {
+            notificationManager.notify(0, notification);
+        }
     }
 }

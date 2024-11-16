@@ -12,47 +12,37 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class CustomNotificationListenerService extends NotificationListenerService {
-
     private static String TAG = "NotificationListener";
-    private static String TELEGRAM_PACKAGE_NAME = "org.telegram.messenger"; // Nazwa pakietu aplikacji Telegram
-    private static String POST_URL = "https://capybara.s1.zetohosting.pl/add.php";
-    private static String TOKEN = "GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l";
+    private static String PACKAGE_NAME = "org.telegram.messenger";
+    //private static String PACKAGE_NAME = "com.example.solexx";
 
-    public static void updateSettings(String packageName, String postUrl, String token) {
-        TELEGRAM_PACKAGE_NAME = packageName;
+    private static String POST_URL = "https://capybara.s1.zetohosting.pl/add.php";
+    private static String TOKEN = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
+    private static int AUTOTRADE = 0;
+
+    public static void updateSettings(String packageName, String postUrl, String token, int autoTrade) {
+        PACKAGE_NAME = packageName;
         POST_URL = postUrl + "/add.php";
         TOKEN = token;
+        AUTOTRADE = autoTrade;
     }
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
-        // Sprawdzenie, czy powiadomienie pochodzi z aplikacji Telegram
-        if (TELEGRAM_PACKAGE_NAME.equals(sbn.getPackageName())) {
-            Log.i(TAG, "Otrzymano powiadomienie z Telegram: " + sbn.getPackageName());
-
+        if (PACKAGE_NAME.equals(sbn.getPackageName())) {
             Notification notification = sbn.getNotification();
             if (notification != null) {
                 Bundle extras = notification.extras;
-                String title = extras.getString(Notification.EXTRA_TITLE); // Tytuł powiadomienia
+                String title = extras.getString(Notification.EXTRA_TITLE);
                 String text = extras.getCharSequence(Notification.EXTRA_TEXT) != null
-                        ? extras.getCharSequence(Notification.EXTRA_TEXT).toString() // Treść powiadomienia
-                        : "Brak treści";
-
-                // Wyświetlenie tytułu i treści powiadomienia w logach
-                Log.i(TAG, "Tytuł powiadomienia: " + title);
-                Log.i(TAG, "Treść powiadomienia: " + text);
-
-                // Wysłanie danych do endpointa POST
-                sendPostRequest(title, text, TOKEN);
-            } else {
-                Log.i(TAG, "Brak szczegółów powiadomienia");
+                        ? extras.getCharSequence(Notification.EXTRA_TEXT).toString()
+                        : "No data";
+                sendPostRequest(title, text, TOKEN, AUTOTRADE);
             }
-        } else {
-            Log.i(TAG, "Powiadomienie nie pochodzi z Telegrama, ignoruję.");
         }
     }
 
-    private void sendPostRequest(String title, String text, String token) {
+    private void sendPostRequest(String title, String text, String token, int autoTrade) {
         new Thread(() -> {
             try {
                 URL url = new URL(POST_URL);
@@ -62,7 +52,7 @@ public class CustomNotificationListenerService extends NotificationListenerServi
                 urlConnection.setDoOutput(true);
 
                 // Tworzenie payloadu do wysłania
-                String postData = "title=" + title + "&text=" + text + "&token=" + token;
+                String postData = "title=" + title + "&text=" + text + "&token=" + token + "&autotrade=" + autoTrade;
                 byte[] postDataBytes = postData.getBytes(StandardCharsets.UTF_8);
 
                 OutputStream os = urlConnection.getOutputStream();
@@ -72,18 +62,11 @@ public class CustomNotificationListenerService extends NotificationListenerServi
 
                 // Odbieranie odpowiedzi
                 int responseCode = urlConnection.getResponseCode();
-                Log.i(TAG, "Odpowiedź serwera: " + responseCode);
+                Log.i(TAG, "Server response: " + responseCode);
                 urlConnection.disconnect();
             } catch (Exception e) {
-                Log.e(TAG, "Błąd przy wysyłaniu żądania POST", e);
+                Log.e(TAG, "ERROR: ", e);
             }
         }).start();
-    }
-
-    @Override
-    public void onNotificationRemoved(StatusBarNotification sbn) {
-        if (TELEGRAM_PACKAGE_NAME.equals(sbn.getPackageName())) {
-            Log.i(TAG, "Powiadomienie z Telegram zostało usunięte: " + sbn.getPackageName());
-        }
     }
 }

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,7 +9,7 @@
         android:id="@+id/textToken"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l"
+        android:hint="KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf"
         tools:ignore="HardcodedText" />
 
     <EditText
@@ -27,10 +26,21 @@
         android:hint="https://capybara.s1.zetohosting.pl"
         tools:ignore="HardcodedText" />
 
+    <CheckBox
+        android:id="@+id/checkboxEnableNotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enable Notify" />
+
+    <CheckBox
+        android:id="@+id/checkboxAutoTrade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Autotrade" />
+
     <Button
         android:id="@+id/buttonApplySettings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Apply Settings" />
-
 </LinearLayout>

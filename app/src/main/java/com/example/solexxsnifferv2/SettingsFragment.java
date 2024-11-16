@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +16,13 @@ public class SettingsFragment extends Fragment {
     private EditText textToken;
     private EditText textApp;
     private EditText textServer;
-    private String tokenValue = "GPuO3vpOdl0Ox087qJulkrS0CvHpk0YEX7dzsSF028D2Rv92R41AJ6BKMwUc9y3l";
+    private CheckBox checkboxEnableNotify;
+    private String tokenValue = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
     private String telegramPackageName = "org.telegram.messenger";
     private String postUrl = "https://capybara.s1.zetohosting.pl/add.php";
+    private boolean enableNotify = false;
+    private int autoTrade = 0;
+    private CheckBox checkboxAutoTrade;
 
     @Nullable
     @Override
@@ -27,6 +32,9 @@ public class SettingsFragment extends Fragment {
         textToken = view.findViewById(R.id.textToken);
         textApp = view.findViewById(R.id.textApp);
         textServer = view.findViewById(R.id.textServer);
+        checkboxEnableNotify = view.findViewById(R.id.checkboxEnableNotify);
+        checkboxAutoTrade = view.findViewById(R.id.checkboxAutoTrade);
+
         Button applyButton = view.findViewById(R.id.buttonApplySettings);
 
         // Obsługa kliknięcia przycisku
@@ -36,13 +44,25 @@ public class SettingsFragment extends Fragment {
             String newAppPackage = textApp.getText().toString().trim();
             String newServerUrl = textServer.getText().toString().trim();
 
+            // Pobranie stanu checkboxa
+            enableNotify = checkboxEnableNotify.isChecked();
+
+            if(checkboxAutoTrade.isChecked())
+            {
+                autoTrade = 1;
+            }
+            else
+            {
+                autoTrade = 0;
+            }
             // Zaktualizowanie zmiennych statycznych
             tokenValue = newToken.isEmpty() ? tokenValue : newToken;
             telegramPackageName = newAppPackage.isEmpty() ? telegramPackageName : newAppPackage;
             postUrl = newServerUrl.isEmpty() ? postUrl : newServerUrl;
 
             // Opcjonalnie: Możesz przekazać te wartości do swojej klasy `CustomNotificationListenerService`
-            CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue);
+            CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue,autoTrade);
+            MainActivity.updateSettings(enableNotify);
         });
 
         return view;
