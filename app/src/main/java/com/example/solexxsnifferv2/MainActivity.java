@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
+        String token = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
+        InitData.sendGetRequest(token);
+
         // Odświeżanie danych co 2 sekundy
         handler.postDelayed(new Runnable() {
             @Override

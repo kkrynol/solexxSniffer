@@ -1,15 +1,23 @@
 package com.example.solexxsnifferv2;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class SettingsFragment extends Fragment {
 
@@ -37,34 +45,69 @@ public class SettingsFragment extends Fragment {
 
         Button applyButton = view.findViewById(R.id.buttonApplySettings);
 
-        // Obsługa kliknięcia przycisku
         applyButton.setOnClickListener(v -> {
-            // Pobranie wartości z pól EditText
+
             String newToken = textToken.getText().toString().trim();
             String newAppPackage = textApp.getText().toString().trim();
             String newServerUrl = textServer.getText().toString().trim();
 
-            // Pobranie stanu checkboxa
+
             enableNotify = checkboxEnableNotify.isChecked();
 
-            if(checkboxAutoTrade.isChecked())
-            {
+            if(checkboxAutoTrade.isChecked()) {
                 autoTrade = 1;
-            }
-            else
-            {
+            } else {
                 autoTrade = 0;
             }
-            // Zaktualizowanie zmiennych statycznych
+
+
             tokenValue = newToken.isEmpty() ? tokenValue : newToken;
             telegramPackageName = newAppPackage.isEmpty() ? telegramPackageName : newAppPackage;
             postUrl = newServerUrl.isEmpty() ? postUrl : newServerUrl;
 
-            // Opcjonalnie: Możesz przekazać te wartości do swojej klasy `CustomNotificationListenerService`
-            CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue,autoTrade);
+            CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue, autoTrade);
             MainActivity.updateSettings(enableNotify);
+
+            sendPostRequest(tokenValue);
         });
 
         return view;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void sendPostRequest(String token) {
+        new AsyncTask<String, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(String... params) {
+                String token = params[0];
+
+                try {
+                    URL url = new URL("https://capybara.s1.zetohosting.pl/settings.php");
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setDoOutput(true);
+
+                    String postData = "token=" + token + "&autotrade=" + autoTrade;
+
+                    try (OutputStream os = connection.getOutputStream()) {
+                        byte[] input = postData.getBytes("utf-8");
+                        os.write(input, 0, input.length);
+                    }
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        Log.i("req", "Server response: " + responseCode);
+                    } else {
+                        Log.i("req", "Server response: " + responseCode);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+        }.execute(token);
     }
 }
