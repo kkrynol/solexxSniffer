@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SolexxSnifferV2</string>
+    <string-array name="options_array">
+        <item>BUY</item>
+        <item>SELL</item>
+    </string-array>
 </resources>

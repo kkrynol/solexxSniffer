@@ -11,8 +11,13 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class InitData {
+
 
     // Metoda wysyłająca zapytanie GET i przetwarzająca dane JSON
     public static void sendGetRequest(String token) {
@@ -75,18 +80,29 @@ public class InitData {
                 super.onPostExecute(result);
                 Log.i("REQ", "result: " + result);
                 if (result != null && !result.isEmpty()) {
+                    Gson gson = new Gson();
                     try {
+                        // Parsujemy wynik jako tablicę JSON
+                        JsonArray jsonArray = gson.fromJson(result, JsonArray.class);
 
-                        JSONObject jsonResponse = new JSONObject(result);
+                        // Sprawdzamy, czy tablica nie jest pusta
+                        if (jsonArray.size() > 0) {
+                            // Pobieramy pierwszy element jako obiekt JSON
+                            JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
 
-                        if (jsonResponse.has("autoTrade")) {
-                            String value = jsonResponse.getString("autoTrade");
-                            Log.i("REQ", "value: " + value);
+                            // Sprawdzamy, czy obiekt zawiera klucz "autotrade"
+                            if (jsonObject.has("autotrade")) {
+                                String value = jsonObject.get("autotrade").getAsString();
+                                Log.i("REQ", "value: " + value);
+
+
+                                SettingsFragment.updateSettings(true);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else {
+                }else {
                     // Jeśli odpowiedź jest pusta, możesz obsłużyć to tutaj
                 }
             }

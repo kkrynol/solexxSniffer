@@ -26,11 +26,10 @@ public class SettingsFragment extends Fragment {
     private EditText textServer;
     private CheckBox checkboxEnableNotify;
     private String tokenValue = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
-    private String telegramPackageName = "org.telegram.messenger";
+    private String telegramPackageName = "com.example.solexx";
     private String postUrl = "https://capybara.s1.zetohosting.pl/add.php";
-    private boolean enableNotify = false;
-    private int autoTrade = 0;
-    private CheckBox checkboxAutoTrade;
+    private static int autoTrade = 0;
+    private static CheckBox checkboxAutoTrade;
 
     @Nullable
     @Override
@@ -40,39 +39,61 @@ public class SettingsFragment extends Fragment {
         textToken = view.findViewById(R.id.textToken);
         textApp = view.findViewById(R.id.textApp);
         textServer = view.findViewById(R.id.textServer);
-        checkboxEnableNotify = view.findViewById(R.id.checkboxEnableNotify);
         checkboxAutoTrade = view.findViewById(R.id.checkboxAutoTrade);
 
         Button applyButton = view.findViewById(R.id.buttonApplySettings);
 
-        applyButton.setOnClickListener(v -> {
+        // Metoda uruchamiająca aplikację
+        applyButton.setOnClickListener(v -> applySettings());
 
-            String newToken = textToken.getText().toString().trim();
-            String newAppPackage = textApp.getText().toString().trim();
-            String newServerUrl = textServer.getText().toString().trim();
-
-
-            enableNotify = checkboxEnableNotify.isChecked();
-
-            if(checkboxAutoTrade.isChecked()) {
-                autoTrade = 1;
-            } else {
-                autoTrade = 0;
-            }
-
-
-            tokenValue = newToken.isEmpty() ? tokenValue : newToken;
-            telegramPackageName = newAppPackage.isEmpty() ? telegramPackageName : newAppPackage;
-            postUrl = newServerUrl.isEmpty() ? postUrl : newServerUrl;
-
-            CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue, autoTrade);
-            MainActivity.updateSettings(enableNotify);
-
-            sendPostRequest(tokenValue);
-        });
+        if (autoTrade == 1) {
+            checkboxAutoTrade.setChecked(true);
+        } else {
+            checkboxAutoTrade.setChecked(false);
+        }
+        Log.i("req", "##################################");
 
         return view;
     }
+
+    public static void updateSettings(boolean at)
+    {
+        if (at == true) {
+            autoTrade = 1;
+        } else {
+            autoTrade = 0;
+        }
+
+    }
+
+    public  void applySettings() {
+
+        String newToken = textToken.getText().toString().trim();
+        String newAppPackage = textApp.getText().toString().trim();
+        String newServerUrl = textServer.getText().toString().trim();
+
+        if (checkboxAutoTrade.isChecked()) {
+            autoTrade = 1;
+        } else {
+            autoTrade = 0;
+        }
+
+        tokenValue = newToken.isEmpty() ? tokenValue : newToken;
+        telegramPackageName = newAppPackage.isEmpty() ? telegramPackageName : newAppPackage;
+        postUrl = newServerUrl.isEmpty() ? postUrl : newServerUrl;
+
+        // Dodaj logowanie, aby sprawdzić, czy te wartości są ustawiane poprawnie
+        Log.i("req", "tokenValue: " + tokenValue);
+        Log.i("req", "telegramPackageName: " + telegramPackageName);
+        Log.i("req", "postUrl: " + postUrl);
+        Log.i("req", "autoTrade: " + autoTrade);
+
+        CustomNotificationListenerService.updateSettings(telegramPackageName, postUrl, tokenValue, autoTrade);
+
+        sendPostRequest(tokenValue);
+    }
+
+
 
     @SuppressLint("StaticFieldLeak")
     private void sendPostRequest(String token) {
@@ -96,7 +117,7 @@ public class SettingsFragment extends Fragment {
                     }
                     int responseCode = connection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
-                        Log.i("req", "Server response: " + responseCode);
+                        //ok
                     } else {
                         Log.i("req", "Server response: " + responseCode);
                     }

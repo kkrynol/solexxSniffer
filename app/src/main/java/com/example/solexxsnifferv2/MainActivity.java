@@ -56,25 +56,36 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
-                if (position == 0) {
-                    dataListFragment = new DataListFragment();
-                    return dataListFragment;
-                } else {
-                    return new SettingsFragment();
+                switch (position) {
+                    case 0:
+                        dataListFragment = new DataListFragment();
+                        return dataListFragment;
+                    case 1:
+                        return new SettingsFragment();
+                    case 2:
+                        return new CustomFragment(); // Dodajemy nowy fragment
+                    default:
+                        throw new IllegalStateException("Unexpected position: " + position);
                 }
             }
 
             @Override
             public int getItemCount() {
-                return 2;
+                return 3; // Zwiększ liczbę zakładek
             }
         });
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            if (position == 0) {
-                tab.setText("Posts");
-            } else {
-                tab.setText("Settings");
+            switch (position) {
+                case 0:
+                    tab.setText("Posts");
+                    break;
+                case 1:
+                    tab.setText("Settings");
+                    break;
+                case 2:
+                    tab.setText("Custom");
+                    break;
             }
         }).attach();
 
@@ -178,8 +189,6 @@ public class MainActivity extends AppCompatActivity {
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .build();
 
-        if(enableNotify) {
-            notificationManager.notify(0, notification);
-        }
+        notificationManager.notify(0, notification);
     }
 }

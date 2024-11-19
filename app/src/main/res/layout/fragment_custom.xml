@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/spinnerOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/asset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Asset"/>
+
+    <EditText
+        android:id="@+id/entry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Entry"/>
+
+    <EditText
+        android:id="@+id/tp1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="TP1"/>
+
+    <EditText
+        android:id="@+id/tp2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="TP2"/>
+
+    <EditText
+        android:id="@+id/tp3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="TP3"/>
+
+    <EditText
+        android:id="@+id/sl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="SL"/>
+
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Send signal"/>
+</LinearLayout>
