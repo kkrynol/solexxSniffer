@@ -1,7 +1,7 @@
 package com.example.solexxsnifferv2;
 
 import android.os.Bundle;
-import android.util.Log; // Dodajemy logowanie
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,20 +26,15 @@ public class DataListFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Inicjalizuj adapter
         adapter = new NotificationAdapter(new ArrayList<>());
         recyclerView.setAdapter(adapter);
 
         return rootView;
     }
-
-    // Metoda do zaktualizowania danych w adapterze
     public void updateData(List<NotificationData> notifications) {
         if (adapter != null) {
-            Log.d("DataListFragment", "Aktualizacja danych: " + notifications.toString());
-            adapter.updateData(notifications);  // Przekazywanie nowych danych do adaptera
-        } else {
-            Log.e("DataListFragment", "Adapter jest nullem, nie można zaktualizować danych.");
+            Log.d("DataListFragment", "Data update: " + notifications.toString());
+            adapter.updateData(notifications);
         }
     }
 }

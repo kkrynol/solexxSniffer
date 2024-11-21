@@ -19,7 +19,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public void updateData(List<NotificationData> newNotifications) {
         this.notifications = newNotifications;
-        notifyDataSetChanged();  // Powiadomienie adaptera, aby odświeżył dane
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -32,10 +32,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         NotificationData notification = notifications.get(position);
-        // Ustaw dane w widoku
+
         holder.titleTextView.setText(notification.getTitle());
         holder.messageTextView.setText(notification.getText());
-        holder.dateTextView.setText(notification.getDate()); // Ustaw datę
+        holder.dateTextView.setText(notification.getDate());
     }
 
     @Override
@@ -46,13 +46,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
         TextView messageTextView;
-        TextView dateTextView; // Dodane pole dla daty
+        TextView dateTextView;
 
         public NotificationViewHolder(View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.titleTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView); // Inicjalizacja widoku daty
+            dateTextView = itemView.findViewById(R.id.dateTextView);
         }
     }
 }

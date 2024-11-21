@@ -18,24 +18,19 @@ import com.google.gson.JsonObject;
 
 public class InitData {
 
-
-    // Metoda wysyłająca zapytanie GET i przetwarzająca dane JSON
     public static void sendGetRequest(String token) {
-        // Tworzymy nową AsyncTask do wykonywania zapytania w tle
         new AsyncTask<String, Void, String>() {
 
             @Override
             protected String doInBackground(String... params) {
-                // Sprawdzamy, czy params nie jest puste
                 if (params.length == 0) {
-                    return null;  // Jeśli brak parametru, kończymy zadanie
+                    return null;
                 }
-
-                String token = params[0];  // Pierwszy element tablicy to nasz token
-                String response = "";  // Zmienna, która przechowa odpowiedź serwera
+                String token = params[0];
+                String response = "";
 
                 try {
-                    URL url = new URL("https://capybara.s1.zetohosting.pl/initData.php");
+                    URL url = new URL(Common.GetEndPoint(EndPoints.INIT_DATA));
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
                     connection.setDoOutput(true);
@@ -45,8 +40,8 @@ public class InitData {
                     String postData = "token=" + token;
 
                     try (OutputStream os = connection.getOutputStream()) {
-                        byte[] input = postData.getBytes("utf-8");  // Konwertujemy dane na bajty
-                        os.write(input, 0, input.length);  // Wysyłamy dane
+                        byte[] input = postData.getBytes("utf-8");
+                        os.write(input, 0, input.length);
                     }
 
                     int responseCode = connection.getResponseCode();
@@ -82,31 +77,24 @@ public class InitData {
                 if (result != null && !result.isEmpty()) {
                     Gson gson = new Gson();
                     try {
-                        // Parsujemy wynik jako tablicę JSON
                         JsonArray jsonArray = gson.fromJson(result, JsonArray.class);
-
-                        // Sprawdzamy, czy tablica nie jest pusta
                         if (jsonArray.size() > 0) {
-                            // Pobieramy pierwszy element jako obiekt JSON
                             JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
 
-                            // Sprawdzamy, czy obiekt zawiera klucz "autotrade"
                             if (jsonObject.has("autotrade")) {
                                 String value = jsonObject.get("autotrade").getAsString();
-                                Log.i("REQ", "value: " + value);
-
-
-                                SettingsFragment.updateSettings(true);
+                                if ("1".equals(value))
+                                    Common.SetAutoTrade(true);
+                                else
+                                    Common.SetAutoTrade(false);
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }else {
-                    // Jeśli odpowiedź jest pusta, możesz obsłużyć to tutaj
                 }
             }
 
-        }.execute(token);  // Przekazujemy token
+        }.execute(token);
     }
 }

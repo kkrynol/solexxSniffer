@@ -28,23 +28,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final String DATA_URL = "https://capybara.s1.zetohosting.pl/";
-    private NotificationAdapter adapter;
     private List<NotificationData> notifications = new ArrayList<>();
     private Handler handler = new Handler();
     private DataListFragment dataListFragment;
-    private int currentListSize = 0; // Dodane pole do przechowywania aktualnej liczby elementów w liście UI
-
-    private static boolean enableNotify = false;
-    public static void updateSettings(boolean flag)
-    {
-        enableNotify = flag;
-    }
+    private int currentListSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
@@ -63,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         return new SettingsFragment();
                     case 2:
-                        return new CustomFragment(); // Dodajemy nowy fragment
+                        return new CustomFragment();
                     default:
                         throw new IllegalStateException("Unexpected position: " + position);
                 }
@@ -71,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public int getItemCount() {
-                return 3; // Zwiększ liczbę zakładek
+                return 3;
             }
         });
 
@@ -89,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
-        String token = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
-        InitData.sendGetRequest(token);
+        InitData.sendGetRequest(Common.GetToken());
 
-        // Odświeżanie danych co 2 sekundy
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -109,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected List<NotificationData> doInBackground(Void... voids) {
                 try {
-                    HttpURLConnection urlConnection = (HttpURLConnection) new URL(DATA_URL).openConnection();
+                    String url = Common.GetServerUrl();
+                    HttpURLConnection urlConnection = (HttpURLConnection) new URL(url).openConnection();
                     urlConnection.setRequestMethod("GET");
                     BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                     StringBuilder jsonResponse = new StringBuilder();
@@ -121,51 +112,41 @@ public class MainActivity extends AppCompatActivity {
 
                     String response = jsonResponse.toString();
 
-                    // Sprawdzanie, czy odpowiedź zawiera "message": "no data"
                     if (response.contains("\"message\":\"no data\"")) {
-                        return new ArrayList<>(); // Zwracamy pustą listę, gdy brak danych
+                        return new ArrayList<>();
                     }
 
-                    // Przetwarzanie danych, jeśli odpowiedź jest prawidłowa
                     Gson gson = new Gson();
                     return gson.fromJson(response, new TypeToken<List<NotificationData>>() {}.getType());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return null; // Zwracamy null w przypadku błędu
+                    return null;
                 }
             }
-
             @Override
             protected void onPostExecute(List<NotificationData> data) {
                 if (data != null && !data.isEmpty()) {
-                    Log.i("test", "dane otrzymane");
-
                     Collections.reverse(data);
                     notifications = data;
 
-                    // Zaktualizowanie widoku w fragmencie
                     if (dataListFragment != null) {
                         dataListFragment.updateData(notifications);
                     }
 
-                    // Sprawdzenie, czy nowa lista ma więcej elementów niż aktualna lista w UI
-                    if(data.size() == 0)
-                    {
+                    if(data.size() == 0) {
                         currentListSize = 0;
                     }
                     if (data.size() > currentListSize) {
-                        currentListSize = data.size(); // Zaktualizuj rozmiar listy
-                        showNotification("Nowy element w Signals", "Pojawił się nowy element!");
+                        currentListSize = data.size();
+                        showNotification("New Post!", "New Post!");
                     }
                 } else {
-                    // Jeśli brak danych lub wystąpił błąd, wyczyszczamy listę
                     if (dataListFragment != null) {
-                        dataListFragment.updateData(new ArrayList<>()); // Wyczyść dane w UI
+                        dataListFragment.updateData(new ArrayList<>());
                     }
 
-                    // Jeżeli dane są null, pokazujemy komunikat o błędzie
                     if (data == null) {
-                        Toast.makeText(MainActivity.this, "Błąd podczas pobierania danych", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Download data error", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

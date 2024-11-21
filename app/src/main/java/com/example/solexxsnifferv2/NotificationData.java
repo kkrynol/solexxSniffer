@@ -3,9 +3,8 @@ package com.example.solexxsnifferv2;
 public class NotificationData {
     private String title;
     private String text;
-    private String date; // Dodane pole dla daty
+    private String date;
 
-    // Konstruktor
     public NotificationData(String title, String text, String date) {
         this.title = title;
         this.text = text;

@@ -29,7 +29,6 @@ public class CustomFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_custom, container, false);
 
-        // Znalezienie pól edycyjnych, przycisku i Spinnera
         EditText asset = view.findViewById(R.id.asset);
         EditText entry = view.findViewById(R.id.entry);
         EditText tp1 = view.findViewById(R.id.tp1);
@@ -39,13 +38,11 @@ public class CustomFragment extends Fragment {
         Button submitButton = view.findViewById(R.id.submitButton);
         Spinner spinnerOptions = view.findViewById(R.id.spinnerOptions);
 
-        // Ustawienie opcji dla Spinnera: "Buy" oraz "Sell"
         String[] options = {"buy", "sell"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, options);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerOptions.setAdapter(adapter);
 
-        // Obsługa przycisku
         submitButton.setOnClickListener(v -> {
             String assetText = asset.getText().toString();
             String entryText = entry.getText().toString();
@@ -55,12 +52,11 @@ public class CustomFragment extends Fragment {
             String slText = sl.getText().toString();
             String selectedOption = spinnerOptions.getSelectedItem().toString();
 
-            // Sprawdzanie, czy pola są wypełnione
             if (!assetText.isEmpty() && !entryText.isEmpty() && !tp1Text.isEmpty() && !tp2Text.isEmpty() && !tp3Text.isEmpty() && !slText.isEmpty()) {
-                String token = "KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf";
+                String token = Common.GetToken();
                 sendDataToServer(token, assetText, entryText, new String[]{tp1Text, tp2Text, tp3Text}, new String[]{slText}, selectedOption);
             } else {
-                Toast.makeText(getActivity(), "Wszystkie pola muszą być wypełnione!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "All fields must be completed!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -73,14 +69,13 @@ public class CustomFragment extends Fragment {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
-                    // Ustawienie URL
-                    URL url = new URL("https://capybara.s1.zetohosting.pl/customSignal.php");
+
+                    URL url = new URL(Common.GetEndPoint(EndPoints.CUSTOM_SIGNAL));
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("POST");
                     urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                     urlConnection.setDoOutput(true);
 
-                    // Formatujemy tablice TP i SL jako ciągi w formacie ["value1","value2",...]
                     String takeProfit = "[" + Arrays.stream(targetPrices)
                             .map(s -> "\"" + s + "\"")
                             .collect(Collectors.joining(",")) + "]";
@@ -88,7 +83,6 @@ public class CustomFragment extends Fragment {
                             .map(s -> "\"" + s + "\"")
                             .collect(Collectors.joining(",")) + "]";
 
-                    // Tworzymy dane do przesłania jako klucz-wartość
                     String postData = "token=" + URLEncoder.encode(token, "UTF-8")
                             + "&asset=" + URLEncoder.encode(asset, "UTF-8")
                             + "&entry=" + URLEncoder.encode(entry, "UTF-8")
@@ -96,13 +90,12 @@ public class CustomFragment extends Fragment {
                             + "&stopLoss=" + URLEncoder.encode(stopLossStr, "UTF-8")
                             + "&type=" + URLEncoder.encode(selectedOption, "UTF-8");
 
-                    // Wysyłanie danych
+
                     OutputStream os = urlConnection.getOutputStream();
                     os.write(postData.getBytes());
                     os.flush();
                     os.close();
 
-                    // Sprawdzenie odpowiedzi serwera
                     int responseCode = urlConnection.getResponseCode();
                     if (responseCode == HttpURLConnection.HTTP_OK) {
                         return "Dane zostały pomyślnie przesłane";

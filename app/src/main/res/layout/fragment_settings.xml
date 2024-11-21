@@ -9,13 +9,15 @@
         android:id="@+id/textToken"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf"
+        android:text="KtE35AKrlEoUlo5xjWFPzWs0CYvWdhATqrakqlxj2Mbg9ZxRTFWlIHh1xTL5wBqf"
+        android:hint="token"
         tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/textApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="com.solexx"
         android:hint="com.solexx"
         tools:ignore="HardcodedText" />
 
@@ -23,7 +25,8 @@
         android:id="@+id/textServer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="https://capybara.s1.zetohosting.pl"
+        android:text="https://capybara.s1.zetohosting.pl"
+        android:hint="Server url"
         tools:ignore="HardcodedText" />
 
     <CheckBox
